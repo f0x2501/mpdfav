@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+# Mpd script to save a list of your favorite songs and play them.
+# Author: F.
+# https://github.com/mentat-fr/mpd-fav
+
+# original idea from Patrick's mpdtag system
+# http://www.musicpd.org/forum/index.php?topic=1672.0
+#
+# This program is free software. It comes without any warranty, to
+# the extent permitted by applicable law. You can redistribute it
+# and/or modify it under the terms of the Do What The Fuck You Want
+# To Public License, Version 2, as published by Sam Hocevar. See
+# http://sam.zoy.org/wtfpl/COPYING for more details. 
+
+
+# Check if mpc here
+if ! (which mpc > /dev/null); then
+   echo -e "the mpc command not found, please install the mpd client"
+   exit
+fi
+
+
+# Where to write your favorites songs
+FAVFILE=~/.mpdfavs
+
+if [ ! -e "$FAVFILE" ]; then
+ touch $FAVFILE
+fi
+
+# Get informations from mpd
+SONG="`mpc --format "%file%" | head -n1`"
+
+# if no argument
+if [ $# -lt 1 ]
+then
+        echo "
+Usage : $0 (add|rm|play)
+
+Save a list of your favorite songs and play them.
+Your favorite songs list is $FAVFILE
+You can check files not found in $FAVFILE.errors
+
+commands:
+
+    add     add the current playing song to $FAVFILE
+    rm      remove the current playing song from $FAVFILE
+    play    create a playing list from $FAVFILE and start playing
+"
+        exit
+fi
+
+# read arguments
+for arg in $*
+do
+case $arg in
+add)
+    echo $SONG >>$FAVFILE
+    cat $FAVFILE | sort | uniq >$FAVFILE.new && mv $FAVFILE.new $FAVFILE
+;;
+
+rm)
+    grep -v "${SONG}" $FAVFILE >$FAVFILE.new && mv $FAVFILE.new $FAVFILE
+;;
+
+play)
+    mpc -q clear
+IFS=$'\n'
+for line in $(cat $FAVFILE)
+    do
+    if !(mpc -q add "$line" 2> /dev/null);
+    then
+        echo $line >>$FAVFILE.errors
+        cat $FAVFILE.errors | sort | uniq >$FAVFILE.new && mv $FAVFILE.new $FAVFILE.errors
+    fi
+done
+    mpc -q play > /dev/null
+;;
+
+esac
+
+done
+
+exit
