@@ -29,7 +29,7 @@ if [ ! -e "$FAVFILE" ]; then
 fi
 
 # Get informations from mpd
-SONG="`mpc --format "%file%" | head -n1`"
+SONG="`mpc --format "%file%" current`"
 
 # if no argument
 if [ $# -lt 1 ]
