@@ -1,4 +1,4 @@
-mpd-fav
+mpdfav
 ========
 
 A **mpd** script to save a list of your favorite songs and play them.  
@@ -9,7 +9,7 @@ Inspiration from [Patrick's mpdtag system](http://www.musicpd.org/forum/index.ph
 Usage
 -----
 
-    Usage : mpd-fav (add|rm|play)
+    Usage : mpdfav (add|rm|play)
 
     Save a list of your favorite songs and play them.
     Your favorite songs list is ~/.mpdfavs
