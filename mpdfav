@@ -46,6 +46,7 @@ commands:
     add     add the current playing song to $FAVFILE
     rm      remove the current playing song from $FAVFILE
     play    create a playing list from $FAVFILE and start playing
+    ls      view favorite songs
 "
         exit
 fi
@@ -75,6 +76,10 @@ for line in $(cat $FAVFILE)
     fi
 done
     mpc -q play > /dev/null
+;;
+
+ls)
+    cat $FAVFILE;
 ;;
 
 esac
