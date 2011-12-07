@@ -56,8 +56,11 @@ for arg in $*
 do
 case $arg in
 add)
-    echo $SONG >>$FAVFILE
-    cat $FAVFILE | sort | uniq >$FAVFILE.new && mv $FAVFILE.new $FAVFILE
+    if [ "$SONG" != "" ]
+    then
+        echo $SONG >>$FAVFILE
+        cat $FAVFILE | sort | uniq >$FAVFILE.new && mv $FAVFILE.new $FAVFILE
+    fi
 ;;
 
 rm)
